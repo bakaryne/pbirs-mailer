@@ -34,12 +34,6 @@ winget install --id Python.Python.3.12 -e
 Il est également disponible sur le
 [site officiel de Python](https://www.python.org/downloads/windows/).
 
-Après l'installation :
-
-1. fermez puis rouvrez PowerShell ;
-2. retournez dans le dossier de PBIRS Mailer ;
-3. relancez l'installation avec `.\setup.cmd`.
-
 Si plusieurs versions de Python sont installées, aucune désinstallation n'est
 nécessaire : le script sélectionne automatiquement une version 3.10 ou plus récente.
 
