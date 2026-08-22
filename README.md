@@ -173,11 +173,13 @@ ruff check .
 
 Licence : MIT.
 
-## Communication
+## Documentation
 
-- [Article Medium prêt à personnaliser](docs/MEDIUM_ARTICLE.md)
-- [Kit GitHub, release et LinkedIn](docs/COMMUNICATION_KIT.md)
-- [Checklist de publication](docs/GITHUB_RELEASE_CHECKLIST.md)
+- [Guide de dépannage](docs/TROUBLESHOOTING.md)
+- [Checklist de validation](docs/ACCEPTANCE_TEST_CHECKLIST.md)
+- [Historique des versions](CHANGELOG.md)
+- [Politique de sécurité](SECURITY.md)
+- [Contribuer au projet](CONTRIBUTING.md)
 
 ## État du projet
 
