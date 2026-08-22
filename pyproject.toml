@@ -9,7 +9,7 @@ description = "Capture Power BI Report Server pages and email them as embedded i
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
-authors = [{ name = "PBIRS Mailer contributors" }]
+authors = [{ name = "bakaryne" }]
 dependencies = [
     "playwright>=1.50,<2",
 ]
