@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+config.json
+config.*.local.json
+captures/*
+!captures/.gitkeep
+logs/*
+!logs/.gitkeep
+dist/
+build/
+*.egg-info/
+

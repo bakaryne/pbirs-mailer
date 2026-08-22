@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "browser": {
+    "channel": "msedge",
+    "headless": true,
+    "viewport_width": 1920,
+    "viewport_height": 1080,
+    "page_timeout_seconds": 120,
+    "frame_timeout_seconds": 60,
+    "render_timeout_seconds": 60,
+    "render_quiet_seconds": 2
+  },
+  "smtp": {
+    "enabled": false,
+    "server": "smtp.example.org",
+    "port": 25,
+    "sender": "pbirs-mailer@example.org",
+    "timeout_seconds": 30,
+    "starttls": false
+  },
+  "paths": {
+    "captures": "captures",
+    "logs": "logs"
+  },
+  "subscriptions": [
+    {
+      "name": "Example report",
+      "enabled": true,
+      "url": "http://pbirs.example.org/Reports/powerbi/Folder/Report?rs:embed=true",
+      "page": {
+        "internal_name": null,
+        "display_name": "Overview"
+      },
+      "recipients": [
+        "recipient@example.org"
+      ],
+      "subject": "Example report - Overview",
+      "filename": "example-overview.png"
+    }
+  ]
+}
+
