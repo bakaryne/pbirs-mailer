@@ -19,6 +19,30 @@ La V1 est volontairement simple : les utilisateurs modifient `config.json`, jama
 
 Prérequis : Python 3.10 ou plus récent et Microsoft Edge.
 
+### Python absent ou incompatible
+
+`setup.cmd` recherche automatiquement une version compatible parmi les installations
+de Python disponibles. Si aucune version compatible n'est trouvée, l'installation
+s'arrête proprement sans modifier le projet.
+
+Python peut être installé depuis PowerShell avec la commande suivante :
+
+```powershell
+winget install --id Python.Python.3.12 -e
+```
+
+Il est également disponible sur le
+[site officiel de Python](https://www.python.org/downloads/windows/).
+
+Après l'installation :
+
+1. fermez puis rouvrez PowerShell ;
+2. retournez dans le dossier de PBIRS Mailer ;
+3. relancez l'installation avec `.\setup.cmd`.
+
+Si plusieurs versions de Python sont installées, aucune désinstallation n'est
+nécessaire : le script sélectionne automatiquement une version 3.10 ou plus récente.
+
 Après avoir cloné ou extrait le projet, ouvrez un terminal dans son dossier.
 
 ### Depuis PowerShell
@@ -155,13 +179,11 @@ ruff check .
 
 Licence : MIT.
 
-## Documentation
+## Communication
 
-- [Guide de dépannage](docs/TROUBLESHOOTING.md)
-- [Checklist de validation](docs/ACCEPTANCE_TEST_CHECKLIST.md)
-- [Historique des versions](CHANGELOG.md)
-- [Politique de sécurité](SECURITY.md)
-- [Contribuer au projet](CONTRIBUTING.md)
+- [Article Medium prêt à personnaliser](docs/MEDIUM_ARTICLE.md)
+- [Kit GitHub, release et LinkedIn](docs/COMMUNICATION_KIT.md)
+- [Checklist de publication](docs/GITHUB_RELEASE_CHECKLIST.md)
 
 ## État du projet
 
