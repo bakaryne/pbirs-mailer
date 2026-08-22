@@ -173,6 +173,12 @@ ruff check .
 
 Licence : MIT.
 
+## Ressources
+
+- [Article Medium : automatiser l'envoi de captures Power BI Report Server avec Python et Playwright](https://medium.com/@nenesidibebakary/pbirs-mailer-automatiser-lenvoi-de-captures-power-bi-report-server-avec-python-et-playwright-dce9a160d3bc)
+- [Documentation de Power BI Report Server](https://learn.microsoft.com/fr-fr/power-bi/report-server/get-started)
+- [Documentation Playwright pour Python](https://playwright.dev/python/docs/intro)
+
 ## Documentation
 
 - [Guide de dépannage](docs/TROUBLESHOOTING.md)
