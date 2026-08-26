@@ -21,8 +21,9 @@ class BrowserConfig:
     viewport_height: int = 1080
     page_timeout_seconds: float = 120
     frame_timeout_seconds: float = 60
-    render_timeout_seconds: float = 60
-    render_quiet_seconds: float = 2
+    render_timeout_seconds: float = 120
+    render_quiet_seconds: float = 5
+    render_stable_seconds: float = 3
 
 
 @dataclass(frozen=True, slots=True)
@@ -122,8 +123,9 @@ def _load_browser(data: dict[str, Any]) -> BrowserConfig:
         viewport_height=_positive_int(data, "viewport_height", 1080, label),
         page_timeout_seconds=_positive_number(data, "page_timeout_seconds", 120, label),
         frame_timeout_seconds=_positive_number(data, "frame_timeout_seconds", 60, label),
-        render_timeout_seconds=_positive_number(data, "render_timeout_seconds", 60, label),
-        render_quiet_seconds=_positive_number(data, "render_quiet_seconds", 2, label),
+        render_timeout_seconds=_positive_number(data, "render_timeout_seconds", 120, label),
+        render_quiet_seconds=_positive_number(data, "render_quiet_seconds", 5, label),
+        render_stable_seconds=_positive_number(data, "render_stable_seconds", 3, label),
     )
 
 

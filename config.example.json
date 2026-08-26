@@ -7,8 +7,9 @@
     "viewport_height": 1080,
     "page_timeout_seconds": 120,
     "frame_timeout_seconds": 60,
-    "render_timeout_seconds": 60,
-    "render_quiet_seconds": 2
+    "render_timeout_seconds": 120,
+    "render_quiet_seconds": 5,
+    "render_stable_seconds": 3
   },
   "smtp": {
     "enabled": false,
@@ -39,4 +40,3 @@
     }
   ]
 }
-

@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.0.1 - 2026-08-26
+
+- Attend la fin effective de toutes les requêtes `querydata`, y compris avec une
+  connexion SSAS lente.
+- Vérifie qu'aucun indicateur de chargement Power BI n'est encore visible.
+- Exige un DOM de visuels stable pendant une durée configurable avant la capture.
+- Porte les valeurs par défaut à 120 secondes de délai maximal, 5 secondes de calme
+  réseau et 3 secondes de stabilité visuelle.
+- Interrompt l'abonnement et crée une capture de diagnostic lorsque le rendu ne se
+  stabilise pas, au lieu d'envoyer une image incomplète.
+
 ## 1.0.0 - 2026-08-22
 
 - Valide le parcours complet sur une instance Power BI Report Server : installation,

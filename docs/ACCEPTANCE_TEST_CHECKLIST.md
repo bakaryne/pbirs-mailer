@@ -13,6 +13,9 @@
 - [ ] Exécuter `.\run.cmd --no-send --headed --verbose` avec le compte cible.
 - [ ] Vérifier l'accès PBIRS et l'authentification Windows.
 - [ ] Vérifier que la bonne page est affichée.
+- [ ] Tester un rapport SSAS lent et vérifier que tous les visuels sont terminés.
+- [ ] Vérifier dans le journal la fin des `querydata`, l'absence de spinner et la
+      stabilité du DOM.
 - [ ] Vérifier la lisibilité de l'image dans `captures/`.
 - [ ] Retirer `--headed` et confirmer que la capture fonctionne sans afficher Edge.
 - [ ] En cas d'échec par libellé, renseigner `page.internal_name` si disponible.

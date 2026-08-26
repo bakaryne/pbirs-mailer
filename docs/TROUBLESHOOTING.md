@@ -58,3 +58,18 @@ Relancez avec :
 
 Consultez ensuite `logs/pbirs-mailer.log` et la capture `*-error.png` dans
 `captures/`. Si possible, renseignez `page.internal_name` dans `config.json`.
+
+## Les visuels SSAS ne sont pas entièrement chargés
+
+À partir de la version 1.0.1, la capture attend la fin des requêtes `querydata`, la
+disparition des indicateurs de chargement et la stabilité du rendu. Pour un rapport
+particulièrement lent, augmentez progressivement dans `config.json` :
+
+```json
+"render_timeout_seconds": 180,
+"render_quiet_seconds": 5,
+"render_stable_seconds": 3
+```
+
+Relancez d'abord avec `--no-send --headed --verbose`. Un dépassement du délai provoque
+un échec et une capture `*-error.png` ; aucun email incomplet n'est envoyé.

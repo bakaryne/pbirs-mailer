@@ -9,7 +9,8 @@ La V1 est volontairement simple : les utilisateurs modifient `config.json`, jama
 
 - plusieurs abonnements dans un seul fichier de configuration ;
 - navigation par identifiant interne Power BI ou par libellé visible ;
-- attente de stabilisation des requêtes Power BI avant la capture ;
+- attente des requêtes Power BI, des indicateurs de chargement et de la stabilité
+  du rendu avant la capture ;
 - image PNG intégrée au message avec un lien vers le rapport ;
 - traitement indépendant des abonnements : un échec ne bloque pas les suivants ;
 - journal tournant dans `logs/` et capture de diagnostic en cas d'erreur ;
@@ -17,27 +18,10 @@ La V1 est volontairement simple : les utilisateurs modifient `config.json`, jama
 
 ## Installation rapide sous Windows
 
-Prérequis : Python 3.10 ou plus récent et Microsoft Edge.
+Prérequis : Microsoft Edge et Python 3.10 ou plus récent.
 
-### Python absent ou incompatible
-
-`setup.cmd` recherche automatiquement une version compatible parmi les installations
-de Python disponibles. Si aucune version compatible n'est trouvée, l'installation
-s'arrête proprement sans modifier le projet.
-
-Python peut être installé depuis PowerShell avec la commande suivante :
-
-```powershell
-winget install --id Python.Python.3.12 -e
-```
-
-Il est également disponible sur le
-[site officiel de Python](https://www.python.org/downloads/windows/).
-
-Si plusieurs versions de Python sont installées, aucune désinstallation n'est
-nécessaire : le script sélectionne automatiquement une version 3.10 ou plus récente.
-
-Après avoir cloné ou extrait le projet, ouvrez un terminal dans son dossier.
+Après avoir cloné ou extrait le projet, ouvrez un terminal dans son dossier, puis
+lancez l'installation.
 
 ### Depuis PowerShell
 
@@ -46,6 +30,20 @@ Après avoir cloné ou extrait le projet, ouvrez un terminal dans son dossier.
 ```
 
 PowerShell exige le préfixe `.\` pour exécuter un script situé dans le dossier courant.
+
+Si aucune version compatible de Python n'est détectée, installez Python depuis
+PowerShell :
+
+```powershell
+winget install --id Python.Python.3.12 -e
+```
+
+Vous pouvez également le télécharger depuis le
+[site officiel de Python](https://www.python.org/downloads/windows/). Fermez ensuite
+PowerShell, ouvrez-le à nouveau et relancez `.\setup.cmd`.
+
+Si plusieurs versions de Python sont présentes, le script sélectionne automatiquement
+une version 3.10 ou plus récente : aucune désinstallation n'est nécessaire.
 
 ### Depuis l'invite de commandes Windows (CMD)
 
@@ -72,6 +70,31 @@ Renseignez ensuite le serveur SMTP, l'expéditeur, les rapports, les pages et le
 destinataires dans `config.json`. Utilisez `.\configure.cmd` dans PowerShell ou
 `configure.cmd` dans CMD pour l'ouvrir directement dans le Bloc-notes. Ce fichier est
 ignoré par Git.
+
+### Attente du rendu Power BI
+
+Avant chaque capture, PBIRS Mailer attend successivement la fin des requêtes
+`querydata`, la disparition des indicateurs de chargement et la stabilité du DOM des
+visuels. Les valeurs par défaut conviennent notamment aux rapports connectés à SSAS :
+
+```json
+"render_timeout_seconds": 120,
+"render_quiet_seconds": 5,
+"render_stable_seconds": 3
+```
+
+Augmentez `render_timeout_seconds` pour un rapport particulièrement lent. Si le rendu
+ne se stabilise pas avant ce délai, l'abonnement échoue et une capture `*-error.png`
+est créée : aucun email contenant une image incomplète n'est envoyé.
+
+### Projet placé sur un partage réseau UNC
+
+`CMD.EXE` peut afficher un avertissement avec un chemin commençant par `\\serveur`.
+Pour une installation sans cet avertissement, lancez directement :
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\setup.ps1
+```
 
 ## Tests progressifs
 
@@ -113,26 +136,6 @@ run.cmd --no-send
 run.cmd
 ```
 
-## Installation manuelle pour les développeurs
-
-```powershell
-py -3 -m venv .venv
-.venv\Scripts\python.exe -m pip install -e ".[dev]"
-.venv\Scripts\python.exe -m pytest
-```
-
-L'activation de `.venv` est facultative : les scripts `.\setup.cmd` et `.\run.cmd`
-appellent toujours le bon interpréteur explicitement.
-
-### Projet placé sur un partage réseau UNC
-
-`CMD.EXE` peut afficher un avertissement avec un chemin commençant par `\\serveur`.
-Pour une installation sans cet avertissement, lancez directement :
-
-```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\setup.ps1
-```
-
 ## Choisir la page du rapport
 
 La méthode prioritaire à tester est `page.internal_name`, par exemple
@@ -153,9 +156,9 @@ fichier PNG uniques.
 
 ## Exécution planifiée
 
-Pour une première mise en production, utilisez le Planificateur de tâches Windows avec
-le même compte technique que celui qui peut ouvrir les rapports PBIRS et joindre le
-relais SMTP. Définissez le dossier du projet comme répertoire de démarrage.
+Pour planifier l'exécution, utilisez le Planificateur de tâches Windows avec le même
+compte technique que celui qui peut ouvrir les rapports PBIRS et joindre le relais
+SMTP. Définissez le dossier du projet comme répertoire de démarrage.
 
 ## Sécurité et publication
 
@@ -164,14 +167,17 @@ relais SMTP. Définissez le dossier du projet comme répertoire de démarrage.
 - vérifiez les droits du compte d'exécution sur chaque rapport PBIRS ;
 - commencez avec `smtp.enabled: false` et un seul abonnement de test.
 
-## Développement
+## Installation pour les développeurs
 
 ```powershell
-pytest
-ruff check .
+py -3 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -e ".[dev]"
+.\.venv\Scripts\python.exe -m pytest
+.\.venv\Scripts\ruff.exe check .
 ```
 
-Licence : MIT.
+L'activation de `.venv` est facultative : les commandes utilisent directement les
+exécutables de l'environnement virtuel.
 
 ## Ressources
 
@@ -189,6 +195,7 @@ Licence : MIT.
 
 ## État du projet
 
-La version `1.0.0` a validé le parcours complet : installation, navigation vers une
-page, capture silencieuse et envoi SMTP. Consultez le changelog pour les limites et
-évolutions prévues.
+La version `1.0.1` renforce l'attente du rendu des rapports, notamment avec une
+connexion SSAS. Consultez le changelog pour les évolutions détaillées.
+
+Licence : MIT.

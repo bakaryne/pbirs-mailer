@@ -42,6 +42,24 @@ def test_load_config_resolves_relative_paths(tmp_path: Path) -> None:
     assert config.paths.captures == tmp_path / "captures"
     assert config.paths.logs == tmp_path / "logs"
     assert config.subscriptions[0].page.display_name == "Overview"
+    assert config.browser.render_timeout_seconds == 120
+    assert config.browser.render_quiet_seconds == 5
+    assert config.browser.render_stable_seconds == 3
+
+
+def test_load_config_accepts_custom_render_stability_settings(tmp_path: Path) -> None:
+    data = valid_config()
+    data["browser"] = {
+        "render_timeout_seconds": 180,
+        "render_quiet_seconds": 8,
+        "render_stable_seconds": 4,
+    }
+
+    config = load_config(write_config(tmp_path, data))
+
+    assert config.browser.render_timeout_seconds == 180
+    assert config.browser.render_quiet_seconds == 8
+    assert config.browser.render_stable_seconds == 4
 
 
 def test_load_config_rejects_path_traversal_filename(tmp_path: Path) -> None:
