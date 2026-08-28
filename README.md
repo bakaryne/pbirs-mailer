@@ -2,7 +2,7 @@
 
 **EN** | [FR](README.fr.md)
 
-PBIRS Mailer automates the capture of a page from a **Power BI Report Server** report and embeds the resulting image directly in the body of an email. It uses Playwright and Microsoft Edge.
+PBIRS Mailer automates the capture and email delivery of Power BI Report Server report pages. It uses Playwright and Microsoft Edge.
 
 V1 is intentionally simple: users configure `config.json`, not the application code.
 
