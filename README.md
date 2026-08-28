@@ -2,9 +2,9 @@
 
 **EN** | [FR](README.fr.md)
 
-PBIRS Mailer automates the capture and email delivery of Power BI Report Server report pages. It uses Playwright and Microsoft Edge.
+PBIRS Mailer automates the capture and email delivery of **Power BI Report Server** report pages using Playwright and Microsoft Edge.
 
-V1 is intentionally simple: users configure `config.json`, not the application code.
+V1 keeps configuration separate from the application code: users define their reports, target pages, recipients, and runtime settings in `config.json`.
 
 ## V1 Features
 
