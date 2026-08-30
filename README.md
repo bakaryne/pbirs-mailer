@@ -1,81 +1,121 @@
 # PBIRS Mailer
 
-**EN** | [FR](README.fr.md)
+PBIRS Mailer automatise la capture d'une page d'un rapport **Power BI Report Server**,
+puis l'envoie dans le corps d'un email. Il s'appuie sur Playwright et Microsoft Edge.
+
 
 PBIRS Mailer automates the capture and email delivery of **Power BI Report Server** report pages using Playwright and Microsoft Edge.
 
 V1 keeps configuration separate from the application code: users define their reports, target pages, recipients, and runtime settings in `config.json`.
 
-## V1 Features
+La V1 est volontairement simple : les utilisateurs configurent l'application sans
+modifier le code. Le moteur v1.0.1 continue d'utiliser `config.json` comme source de
+vérité.
 
-- multiple subscriptions in a single configuration file;
-- navigation by Power BI internal page name or visible page label;
-- waits for Power BI requests, loading indicators, and rendering stability before taking a screenshot;
-- PNG image embedded in the email, with a link back to the report;
-- independent subscription processing: one failure does not prevent subsequent subscriptions from running;
-- rotating logs in `logs/` and diagnostic screenshots when an error occurs;
-- validation-only, capture-only, and headed-browser modes.
+La version `1.1.0` ajoute un Configurator Windows local autour de ce moteur, sans
+modifier sa logique de navigation et de capture.
 
-## Quick Start on Windows
 
-Requirements: Microsoft Edge and Python 3.10 or later.
+## Fonctionnalités V1
 
-After cloning or extracting the project, open a terminal in the project directory and run the setup.
+- plusieurs abonnements dans un seul fichier de configuration ;
+- navigation par identifiant interne Power BI ou par libellé visible ;
+- attente des requêtes Power BI, des indicateurs de chargement et de la stabilité
+  du rendu avant la capture ;
+- image PNG intégrée au message avec un lien vers le rapport ;
+- traitement indépendant des abonnements : un échec ne bloque pas les suivants ;
+- journal tournant dans `logs/` et capture de diagnostic en cas d'erreur ;
+- modes validation seule, capture seule et navigateur visible.
 
-### From PowerShell
+## Installation rapide sous Windows
+
+Prérequis : Microsoft Edge et Python 3.10 ou plus récent.
+
+Après avoir cloné ou extrait le projet, ouvrez un terminal dans son dossier, puis
+lancez l'installation.
+
+### Depuis PowerShell
 
 ```powershell
 .\setup.cmd
 ```
 
-PowerShell requires the `.\` prefix to run a script located in the current directory.
+PowerShell exige le préfixe `.\` pour exécuter un script situé dans le dossier courant.
 
-If no compatible Python version is detected, install Python from PowerShell:
+Si aucune version compatible de Python n'est détectée, installez Python depuis
+PowerShell :
 
 ```powershell
 winget install --id Python.Python.3.12 -e
 ```
 
-You can also download it from the [official Python website](https://www.python.org/downloads/windows/).
+Vous pouvez également le télécharger depuis le
+[site officiel de Python](https://www.python.org/downloads/windows/). Fermez ensuite
+PowerShell, ouvrez-le à nouveau et relancez `.\setup.cmd`.
 
-Then close PowerShell, open it again, and rerun:
+Si plusieurs versions de Python sont présentes, le script sélectionne automatiquement
+une version 3.10 ou plus récente : aucune désinstallation n'est nécessaire.
 
-```powershell
-.\setup.cmd
-```
-
-If multiple Python versions are installed, the setup script automatically selects a compatible Python 3.10+ version. No existing installation needs to be removed.
-
-### From Windows Command Prompt (CMD)
+### Depuis l'invite de commandes Windows (CMD)
 
 ```cmd
 setup.cmd
 ```
 
-CMD does not require the `.\` prefix. You can also double-click `setup.cmd` from File Explorer.
+Dans CMD, le préfixe `.\` n'est pas nécessaire. Il est également possible de
+double-cliquer sur `setup.cmd` dans l'Explorateur de fichiers.
 
-The setup script:
+Ce script :
 
-- checks the Python version;
-- creates `.venv`, isolated from the system Python installation;
-- installs PBIRS Mailer and Playwright;
-- creates `config.json` only if it does not already exist;
-- detects Microsoft Edge;
-- validates the configuration.
+- vérifie la version de Python ;
+- crée `.venv`, un environnement isolé du Python système ;
+- installe PBIRS Mailer et Playwright ;
+- crée `config.json` uniquement s'il n'existe pas ;
+- détecte Microsoft Edge ;
+- valide la configuration.
 
-It also works when the project is located on a UNC network share. The Python environment does not need to be activated manually.
+Il fonctionne également lorsque le projet se trouve sur un partage réseau UNC. Il ne
+faut pas activer manuellement l'environnement Python.
 
-Then configure the SMTP server, sender, reports, pages, and recipients in `config.json`.
+Renseignez ensuite le serveur SMTP, l'expéditeur, les rapports, les pages et les
+destinataires avec le Configurator :
 
-Use `.\configure.cmd` from PowerShell or `configure.cmd` from CMD to open it directly in Notepad.
+```powershell
+.\configure.cmd
+```
 
-This file is ignored by Git.
+L'interface permet de gérer les paramètres du navigateur, le serveur SMTP et les
+souscriptions. Elle valide les valeurs avec le moteur de configuration v1.0.1 et peut
+lancer une capture sans email. `config.json` reste le fichier utilisé par `run.cmd` et
+il demeure ignoré par Git.
 
-### Waiting for Power BI Rendering
+### PBIRS Mailer Configurator
 
-Before each screenshot, PBIRS Mailer waits for `querydata` requests to complete, loading indicators to disappear, and the visual DOM to remain stable.
+Le Configurator est une interface Windows locale construite avec Tkinter. Il ne lance
+aucun serveur web et n'envoie aucune information vers un service externe.
 
-The default values are suitable for reports connected to sources such as SSAS:
+Il permet de :
+
+- configurer Microsoft Edge, les délais de rendu et les dossiers locaux ;
+- configurer le relais SMTP sans stocker de mot de passe ;
+- ajouter, modifier, dupliquer, activer ou supprimer une souscription ;
+- valider le document avant enregistrement ;
+- créer une capture sans envoyer d'email ;
+- sauvegarder automatiquement l'ancien `config.json` avant remplacement.
+
+L'interface indique les modifications non enregistrées et propose de les sauvegarder
+avant sa fermeture. Elle ne crée pas de nouvelle sauvegarde lorsque le contenu de la
+configuration n'a pas changé.
+
+Les sauvegardes portent un nom comme `config.backup-20260829-103000.json`. Elles
+contiennent les mêmes informations que la configuration active et sont également
+ignorées par Git.
+
+### Attente du rendu Power BI
+
+Avant chaque capture, PBIRS Mailer attend successivement la fin des requêtes
+`querydata`, la disparition des indicateurs de chargement et la stabilité du DOM des
+visuels. Les valeurs par défaut conviennent notamment aux rapports connectés à SSAS :
 
 ```json
 "render_timeout_seconds": 120,
@@ -83,57 +123,52 @@ The default values are suitable for reports connected to sources such as SSAS:
 "render_stable_seconds": 3
 ```
 
-Increase `render_timeout_seconds` for particularly slow reports.
+Augmentez `render_timeout_seconds` pour un rapport particulièrement lent. Si le rendu
+ne se stabilise pas avant ce délai, l'abonnement échoue et une capture `*-error.png`
+est créée : aucun email contenant une image incomplète n'est envoyé.
 
-If the report does not stabilize before the timeout, the subscription fails and a `*-error.png` screenshot is created. No email containing an incomplete image is sent.
+### Projet placé sur un partage réseau UNC
 
-### Project Located on a UNC Network Share
-
-`CMD.EXE` may display a warning when the project path starts with `\\server`.
-
-To run the setup without this warning, use:
+`CMD.EXE` peut afficher un avertissement avec un chemin commençant par `\\serveur`.
+Pour une installation sans cet avertissement, lancez directement :
 
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\setup.ps1
 ```
 
-## Progressive Testing
+## Tests progressifs
 
-Validate the configuration without opening Edge:
+Valider la configuration sans ouvrir Edge :
 
 ```powershell
 .\run.cmd --dry-run
 ```
 
-Generate screenshots without sending email:
+Créer les captures sans envoyer de mail :
 
 ```powershell
 .\run.cmd --no-send
 ```
 
-Edge runs headlessly by default with `browser.headless: true`.
+Edge reste invisible par défaut grâce à `browser.headless: true`. L'option `--headed`
+doit être utilisée uniquement pour diagnostiquer un problème de navigation.
 
-Use `--headed` only when troubleshooting browser navigation.
-
-To display Edge and troubleshoot a single subscription:
+Afficher Edge pour diagnostiquer la navigation d'un seul abonnement :
 
 ```powershell
 .\run.cmd --no-send --headed --subscription "Example report" --verbose
 ```
 
-Then enable `smtp.enabled` in `config.json` and run:
+Activer ensuite `smtp.enabled` dans `config.json`, puis lancer :
 
 ```powershell
 .\run.cmd
 ```
 
-The exit code is:
+Le code de sortie vaut `0` si tous les abonnements réussissent, `1` si au moins un
+abonnement échoue et `2` si la configuration ou l'environnement est invalide.
 
-- `0` if all subscriptions succeed;
-- `1` if at least one subscription fails;
-- `2` if the configuration or environment is invalid.
-
-From CMD, use the same commands without the `.\` prefix:
+Depuis CMD, utilisez les mêmes commandes sans le préfixe `.\`, par exemple :
 
 ```cmd
 run.cmd --dry-run
@@ -141,42 +176,50 @@ run.cmd --no-send
 run.cmd
 ```
 
-## Selecting the Report Page
+## Choisir la page du rapport
 
-The preferred method to test is `page.internal_name`, for example:
+La méthode prioritaire à tester est `page.internal_name`, par exemple
+`ReportSection42`. Elle ajoute `pageName` à l'URL et évite de dépendre du texte
+affiché. Son comportement doit être validé sur la version de PBIRS utilisée : le
+paramètre est documenté pour les rapports Power BI intégrés, mais la documentation
+PBIRS ne garantit explicitement que `rs:embed=true`.
 
-```text
-ReportSection42
-```
+Si cet identifiant n'est pas connu ou n'est pas pris en charge, laissez
+`internal_name` à `null` et renseignez
+`page.display_name`. PBIRS Mailer cherchera alors un onglet, un bouton ou un lien
+accessible portant ce libellé. En cas d'échec, lancez le test avec `--headed --verbose` ;
+une image `*-error.png` sera aussi créée dans `captures/`.
 
-It adds `pageName` to the URL and avoids relying on visible UI text.
+Une souscription correspond à une page et produit une image. Pour capturer plusieurs
+pages d'un même rapport, dupliquez la souscription avec un nom, une page et un nom de
+fichier PNG uniques.
 
-Its behavior should be validated against the PBIRS version in use: the parameter is documented for embedded Power BI reports, while the PBIRS documentation explicitly guarantees only `rs:embed=true`.
+## Exécution planifiée
 
-If the internal name is unknown or unsupported, leave `internal_name` set to `null` and configure `page.display_name`.
+Pour planifier l'exécution, utilisez le Planificateur de tâches Windows avec le même
+compte technique que celui qui peut ouvrir les rapports PBIRS et joindre le relais
+SMTP. Définissez le dossier du projet comme répertoire de démarrage.
 
-PBIRS Mailer will then look for an accessible tab, button, or link matching that label.
+Le Configurator ne doit pas être lancé par la tâche planifiée. La tâche continue
+d'appeler `run.cmd`, qui lit la dernière version enregistrée de `config.json`.
 
-If navigation fails, run the test with `--headed --verbose`. A `*-error.png` screenshot will also be created in `captures/`.
+## Mise à niveau depuis la version 1.0.1
 
-One subscription represents one page and produces one image.
+Installez la version 1.1.0 dans un nouveau dossier, copiez-y uniquement votre
+`config.json`, puis exécutez `setup.cmd`. Ne copiez pas l'ancien dossier `.venv`.
 
-To capture multiple pages from the same report, duplicate the subscription and use a unique subscription name, page, and PNG filename for each one.
+Le format de configuration reste à la version `1` : aucune conversion n'est
+nécessaire. Consultez le [guide de migration](docs/MIGRATION_1.0.1_TO_1.1.0.md) pour
+la procédure complète.
 
-## Scheduled Execution
+## Sécurité et publication
 
-For scheduled execution, use Windows Task Scheduler with the same technical account that can access the PBIRS reports and reach the SMTP relay.
+- ne publiez jamais `config.json`, les captures, les journaux ni les données métier ;
+- utilisez des exemples synthétiques dans les copies d'écran et la documentation ;
+- vérifiez les droits du compte d'exécution sur chaque rapport PBIRS ;
+- commencez avec `smtp.enabled: false` et un seul abonnement de test.
 
-Set the project directory as the task's working directory.
-
-## Security and Publishing
-
-- never publish `config.json`, screenshots, logs, or business data;
-- use synthetic data in screenshots and documentation;
-- verify that the execution account has access to each PBIRS report;
-- start with `smtp.enabled: false` and a single test subscription.
-
-## Developer Installation
+## Installation pour les développeurs
 
 ```powershell
 py -3 -m venv .venv
@@ -185,26 +228,30 @@ py -3 -m venv .venv
 .\.venv\Scripts\ruff.exe check .
 ```
 
-Activating `.venv` is optional: the commands directly use the executables from the virtual environment.
+L'activation de `.venv` est facultative : les commandes utilisent directement les
+exécutables de l'environnement virtuel.
 
-## Resources
+## Ressources
 
-- **EN** — [From Report Server to Inbox: Automating Power BI Report Server Screenshots with Python and Playwright](https://medium.com/@nenesidibebakary/from-report-server-to-inbox-automating-power-bi-report-server-screenshots-with-python-and-c65962e66fec)
-- **FR** — [PBIRS Mailer : automatiser l'envoi de captures Power BI Report Server avec Python et Playwright](https://medium.com/@nenesidibebakary/pbirs-mailer-automatiser-lenvoi-de-captures-power-bi-report-server-avec-python-et-playwright-dce9a160d3bc)
-- [Power BI Report Server documentation](https://learn.microsoft.com/en-us/power-bi/report-server/get-started)
-- [Playwright for Python documentation](https://playwright.dev/python/docs/intro)
+- [Article Medium : automatiser l'envoi de captures Power BI Report Server avec Python et Playwright](https://medium.com/@nenesidibebakary/pbirs-mailer-automatiser-lenvoi-de-captures-power-bi-report-server-avec-python-et-playwright-dce9a160d3bc)
+- [Documentation de Power BI Report Server](https://learn.microsoft.com/fr-fr/power-bi/report-server/get-started)
+- [Documentation Playwright pour Python](https://playwright.dev/python/docs/intro)
 
 ## Documentation
 
-- [Troubleshooting Guide](docs/TROUBLESHOOTING.md)
-- [Acceptance Test Checklist](docs/ACCEPTANCE_TEST_CHECKLIST.md)
-- [Changelog](CHANGELOG.md)
-- [Security Policy](SECURITY.md)
-- [Contributing](CONTRIBUTING.md)
+- [Guide du Configurator](docs/CONFIGURATOR.md)
+- [Migration depuis la version 1.0.1](docs/MIGRATION_1.0.1_TO_1.1.0.md)
+- [Notes de publication 1.1.0](docs/RELEASE_NOTES_1.1.0.md)
+- [Guide de dépannage](docs/TROUBLESHOOTING.md)
+- [Checklist de validation](docs/ACCEPTANCE_TEST_CHECKLIST.md)
+- [Historique des versions](CHANGELOG.md)
+- [Politique de sécurité](SECURITY.md)
+- [Contribuer au projet](CONTRIBUTING.md)
 
-## Project Status
+## État du projet
 
-Version `1.0.1` improves report rendering synchronization, particularly for reports connected to SSAS.
+La version stable actuelle est la `1.1.0`. Son Configurator a été validé sur Windows
+avec un rapport Power BI Report Server réel.
 
 See the changelog for detailed changes.
 
