@@ -1,15 +1,31 @@
-# Recette de la V1
+# Recette de PBIRS Mailer 1.1.0
 
 ## Avant le test
 
 - [ ] Exécuter `.\setup.cmd` depuis le dossier du projet.
-- [ ] Ouvrir `config.json` avec `.\configure.cmd`.
+- [ ] Ouvrir le Configurator avec `.\configure.cmd`.
 - [ ] Renseigner un seul rapport non sensible et un seul destinataire de test.
 - [ ] Garder `smtp.enabled` à `false`.
-- [ ] Exécuter `.\run.cmd --dry-run`.
+- [ ] Cliquer sur **Vérifier la configuration**, puis sur **Enregistrer**.
+- [ ] Modifier une valeur sans risque, enregistrer de nouveau et vérifier qu'un
+      fichier `config.backup-*.json` a été créé.
+- [ ] Fermer puis rouvrir le Configurator et vérifier que les valeurs ont été
+      conservées.
+- [ ] Modifier un paramètre, fermer la fenêtre et vérifier que la confirmation de
+      sauvegarde apparaît.
+- [ ] Enregistrer sans rien modifier et vérifier qu'aucun nouveau backup n'est créé.
+
+## Compatibilité avec la ligne de commande
+
+- [ ] Exécuter `.\run.cmd --dry-run` et confirmer que la configuration est valide.
+- [ ] Vérifier que le Planificateur de tâches ou SQL Server Agent appelle toujours
+      `run.cmd`, jamais `configure.cmd`.
 
 ## Capture
 
+- [ ] Cliquer sur **Capturer sans envoyer** dans le Configurator et vérifier le
+      résultat affiché dans la fenêtre de diagnostic.
+- [ ] Copier le diagnostic avec le bouton prévu à cet effet.
 - [ ] Exécuter `.\run.cmd --no-send --headed --verbose` avec le compte cible.
 - [ ] Vérifier l'accès PBIRS et l'authentification Windows.
 - [ ] Vérifier que la bonne page est affichée.

@@ -1,14 +1,15 @@
 [build-system]
-requires = ["setuptools>=75"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "pbirs-mailer"
-version = "1.0.1"
+version = "1.1.0"
 description = "Capture Power BI Report Server pages and email them as embedded images."
 readme = "README.md"
 requires-python = ">=3.10"
-license = { text = "MIT" }
+license = "MIT"
+license-files = ["LICENSE"]
 authors = [{ name = "PBIRS Mailer contributors" }]
 dependencies = [
     "playwright>=1.50,<2",
@@ -22,6 +23,7 @@ dev = [
 
 [project.scripts]
 pbirs-mailer = "pbirs_mailer.cli:main"
+pbirs-mailer-configurator = "pbirs_mailer.gui:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
