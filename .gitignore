@@ -4,6 +4,7 @@ __pycache__/
 .pytest_cache/
 .ruff_cache/
 config.json
+config.backup-*.json
 config.*.local.json
 captures/*
 !captures/.gitkeep
@@ -12,4 +13,3 @@ logs/*
 dist/
 build/
 *.egg-info/
-

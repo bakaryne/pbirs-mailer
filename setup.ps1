@@ -145,7 +145,7 @@ if ($LASTEXITCODE -ne 0) {
 
 Write-Host ""
 Write-Host "Installation terminee." -ForegroundColor Green
-Write-Host "1. Modifiez config.json."
+Write-Host "1. Lancez .\configure.cmd pour ouvrir le Configurator."
 Write-Host "2. Testez avec : .\run.cmd --dry-run"
 Write-Host "3. Capturez sans email et sans afficher Edge : .\run.cmd --no-send --verbose"
 Write-Host "   Diagnostic visuel uniquement : ajoutez --headed"

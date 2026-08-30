@@ -1,5 +1,32 @@
 # Changelog
 
+## 1.1.0 - 2026-08-29
+
+- Ajoute une interface Windows locale pour modifier `config.json` sans toucher au
+  code.
+- Gère les paramètres du navigateur, le relais SMTP et les souscriptions.
+- Réutilise strictement la validation de configuration du moteur 1.0.1.
+- Enregistre le JSON de manière atomique et sauvegarde la version précédente.
+- Permet de lancer une capture sans email depuis l'interface.
+- Enregistre immédiatement les ajouts et modifications de souscriptions afin
+  d'éviter toute confusion entre vérification et sauvegarde.
+- Affiche le chemin exact du `config.json` utilisé dans la fenêtre de diagnostic.
+- Sélectionne automatiquement l'unique souscription afin que les boutons d'action
+  fonctionnent immédiatement.
+- Affiche clairement qu'une dernière souscription ne peut pas être supprimée, mais
+  peut être désactivée.
+- Force `configure.cmd` à charger le code de l'archive courante, même si un ancien
+  Configurator était déjà installé dans `.venv`.
+- Enregistre désormais la souscription directement depuis le bouton de la fenêtre de
+  modification, avant de fermer celle-ci.
+- Affiche l'URL du rapport dans le tableau pour rendre toute modification visible.
+- Signale les modifications non enregistrées et propose de les sauvegarder à la
+  fermeture.
+- Évite de créer un fichier de sauvegarde lorsque la configuration n'a pas changé.
+- Bloque les actions de configuration pendant une capture et permet de copier le
+  diagnostic dans le presse-papiers.
+- Conserve le moteur de navigation et de capture de la version 1.0.1 sans modification.
+
 ## 1.0.1 - 2026-08-26
 
 - Attend la fin effective de toutes les requêtes `querydata`, y compris avec une
